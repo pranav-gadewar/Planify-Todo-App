@@ -345,7 +345,7 @@ export default function TasksPage() {
       const grouped: Record<string, Task[]> = {};
       tasks.forEach((task) => {
         const date = task.createdAt
-          ? task.createdAt.toDate().toLocaleDateString()
+          ? task.createdAt.toDate().toLocaleDateString("en-GB")
           : "No Date";
         if (!grouped[date]) grouped[date] = [];
         grouped[date].push(task);

@@ -304,7 +304,7 @@ export default function ProfilePage() {
             <span>
               Joined:{" "}
               {userData?.createdAt
-                ? new Date(userData.createdAt.seconds * 1000).toLocaleDateString()
+                ? new Date(userData.createdAt.seconds * 1000).toLocaleDateString("en-GB")
                 : "N/A"}
             </span>
           </div>
