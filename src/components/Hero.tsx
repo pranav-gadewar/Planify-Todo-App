@@ -311,7 +311,7 @@ export default function Hero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-          className="w-full flex justify-center items-center mt-20 px-4 py-20 bg-neutral-950 overflow-hidden"
+          className="w-full flex justify-center items-center mt-20 px-4 py-20  overflow-hidden"
         >
           <div className="relative w-full max-w-6xl group">
 
