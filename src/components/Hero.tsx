@@ -191,6 +191,157 @@ export default function Hero() {
             <span>Uncompromising Focus</span>
           </div>
         </motion.div>
+        
+        <div className="flex flex-col justify-center items-center mt-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative mt-20 w-full max-w-5xl group"
+        >
+          {/* Ambient Purple Glows */}
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
+
+          <div className="relative overflow-hidden bg-neutral-950/50 backdrop-blur-3xl border border-white/10 shadow-[0_0_50px_-12px_rgba(168,85,247,0.2)] rounded-[2.5rem] p-8 md:p-14">
+            {/* Subtle Animated Border Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-violet-500/10 pointer-events-none" />
+
+            <div className="relative z-10">
+              <motion.h2
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-3"
+              >
+                Why use our <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-violet-400">ToDo App?</span>
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-neutral-400 text-lg mb-12 max-w-2xl leading-relaxed"
+              >
+                Built for speed, simplicity, and focus — helping you manage tasks without distractions.
+              </motion.p>
+
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.1 }
+                  }
+                }}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-left"
+              >
+                {[
+                  {
+                    title: "Stay Organized",
+                    desc: "All your tasks structured clearly so nothing gets lost.",
+                  },
+                  {
+                    title: "Quick Task Management",
+                    desc: "Add, edit, and complete tasks in seconds.",
+                  },
+                  {
+                    title: "Deadlines & Focus",
+                    desc: "Prioritize what matters and never miss important work.",
+                  },
+                  {
+                    title: "Boost Productivity",
+                    desc: "Reduce clutter and focus on completing goals faster.",
+                  },
+                  {
+                    title: "Minimal & Clean UI",
+                    desc: "Dark, distraction-free interface for better focus.",
+                  },
+                  {
+                    title: "Accessible Anywhere",
+                    desc: "Use seamlessly across devices anytime, anywhere.",
+                  },
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    variants={{
+                      hidden: { opacity: 0, y: 10 },
+                      show: { opacity: 1, y: 0 }
+                    }}
+                    whileHover={{ x: 5 }}
+                    className="flex items-start gap-4 group/item transition-colors duration-300"
+                  >
+                    <div className="flex-shrink-0 mt-1">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 group-hover/item:border-purple-400/50 group-hover/item:bg-purple-500/20 transition-all duration-300">
+                        <CheckCircle2 className="text-purple-400 w-5 h-5 shadow-[0_0_15px_rgba(168,85,247,0.4)]" />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white text-base group-hover/item:text-purple-300 transition-colors duration-300">
+                        {item.title}
+                      </p>
+                      <p className="text-neutral-400 text-sm leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+        </div>
+        {/* <div className="w-full flex justify-center items-center px-4 py-10 bg-neutral-950">
+          <div className="w-full max-w-6xl">
+
+            <img
+              src="/poster.png" // 👉 replace with your image path
+              alt="Planify Poster"
+              className="w-full h-auto rounded-2xl shadow-2xl border border-neutral-800 object-cover"
+            />
+
+          </div>
+        </div> */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+          className="w-full flex justify-center items-center mt-20 px-4 py-20 bg-neutral-950 overflow-hidden"
+        >
+          <div className="relative w-full max-w-6xl group">
+
+            {/* Dynamic Background Glow - Purple Theme */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-violet-600/20 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-500" />
+
+            <motion.div
+              whileHover={{ scale: 1.015 }}
+              transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+              className="relative"
+            >
+              {/* Floating Glass Overlay for Premium Feel */}
+              <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 group-hover:ring-purple-500/30 transition-all duration-500 z-10 pointer-events-none" />
+
+              <img
+                src="/poster2.png"
+                alt="Planify Poster"
+                className="w-full h-auto rounded-2xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)] border border-neutral-800 object-cover filter saturate-[1.1] contrast-[1.02]"
+              />
+
+              {/* Subtle Bottom Light Reflection */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-purple-500/5 to-transparent rounded-b-2xl pointer-events-none" />
+            </motion.div>
+
+            {/* Decorative corner accents */}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-purple-500/10 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-violet-500/10 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+          </div>
+        </motion.div>
       </div>
     </section>
   );
