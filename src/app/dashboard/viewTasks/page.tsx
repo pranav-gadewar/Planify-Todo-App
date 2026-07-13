@@ -56,7 +56,7 @@
 //           ...(doc.data() as Omit<Task, "id">),
 //         }));
 
-//         // Pending tasks first
+//         // Pending tasks first within their groups
 //         taskList.sort((a, b) => Number(a.completed) - Number(b.completed));
 
 //         setTasks(taskList);
@@ -93,6 +93,7 @@
 //     );
 //   }
 
+//   // --- Grouping Logic ---
 //   const tasksByDate: Record<string, Task[]> = {};
 
 //   tasks.forEach((task) => {
@@ -111,87 +112,107 @@
 //     tasksByDate[date].push(task);
 //   });
 
+//   // Sort dates in descending order (Newest first)
+//   const sortedDates = Object.keys(tasksByDate).sort((a, b) => {
+//     if (a === "No Date") return 1;
+//     if (b === "No Date") return -1;
+    
+//     // Split "DD/MM/YYYY" to compare as Date objects
+//     const [dayA, monthA, yearA] = a.split("/").map(Number);
+//     const [dayB, monthB, yearB] = b.split("/").map(Number);
+    
+//     return new Date(yearB, monthB - 1, dayB).getTime() - new Date(yearA, monthA - 1, dayA).getTime();
+//   });
+
 //   return (
-//     <div className="max-w-4xl mx-auto">
+//     <div className="w-full mx-auto">
 //       {/* Page Title */}
 //       <h1 className="text-3xl font-bold text-white mb-8">View Tasks</h1>
 
-//       {/* Task List */}
-//       <div className="bg-black/40 border border-purple-900/40 rounded-xl divide-y">
+//       {/* Task List Container */}
+//       <div className="space-y-8">
 //         {tasks.length === 0 && (
-//           <div className="p-6 text-gray-400">No tasks found.</div>
+//           <div className="bg-black/40 border border-purple-900/40 rounded-xl p-6 text-gray-400">
+//             No tasks found.
+//           </div>
 //         )}
 
-//         {Object.keys(tasksByDate).map((date) => (
-//           <div key={date}>
-//             <div className="px-6 py-3 text-purple-400 text-sm font-semibold">
-//               {date}
+//         {sortedDates.map((date) => (
+//           <div key={date} className="space-y-3">
+//             {/* Date Header */}
+//             <div className="flex items-center gap-4 px-2">
+//                 <h2 className="text-purple-400 text-sm font-bold uppercase tracking-widest">
+//                 {date}
+//                 </h2>
+//                 <div className="h-px bg-purple-900/30 flex-grow"></div>
 //             </div>
 
-//             {tasksByDate[date].map((task) => (
-//               <div
-//                 key={task.id}
-//                 className={`flex items-center justify-between px-6 py-4 transition hover:bg-purple-900/20 ${
-//                   task.completed ? "opacity-60" : ""
-//                 }`}
-//               >
-//                 {/* Left Section */}
-//                 <div className="flex items-center gap-4">
-//                   <button
-//                     onClick={() => toggleTask(task)}
-//                     className="transition hover:scale-110"
-//                   >
-//                     {task.completed ? (
-//                       <CheckCircle2 className="text-green-500" size={22} />
-//                     ) : (
-//                       <Circle className="text-purple-400" size={22} />
-//                     )}
-//                   </button>
-
-//                   <div>
-//                     <h3
-//                       className={`font-medium ${
-//                         task.completed
-//                           ? "line-through text-gray-500"
-//                           : "text-white"
-//                       }`}
-//                     >
-//                       {task.title}
-//                     </h3>
-
-//                     <p
-//                       className={`text-sm ${
-//                         task.completed
-//                           ? "text-gray-500 line-through"
-//                           : "text-gray-400"
-//                       }`}
-//                     >
-//                       {task.description}
-//                     </p>
-//                   </div>
-//                 </div>
-
-//                 {/* Priority Badge */}
-//                 <span
-//                   className={`text-xs px-3 py-1 rounded-full font-medium ${
-//                     task.priority === "High"
-//                       ? "bg-red-500/20 text-red-400"
-//                       : task.priority === "Medium"
-//                         ? "bg-purple-500/20 text-purple-400"
-//                         : "bg-blue-500/20 text-blue-400"
+//             {/* Task Group Card */}
+//             <div className="bg-black/40 border border-purple-900/40 rounded-xl divide-y divide-purple-900/20 overflow-hidden">
+//               {tasksByDate[date].map((task) => (
+//                 <div
+//                   key={task.id}
+//                   className={`flex items-center justify-between px-6 py-4 transition hover:bg-purple-900/10 ${
+//                     task.completed ? "opacity-60" : ""
 //                   }`}
 //                 >
-//                   {task.priority}
-//                 </span>
-//               </div>
-//             ))}
+//                   {/* Left Section */}
+//                   <div className="flex items-center gap-4">
+//                     <button
+//                       onClick={() => toggleTask(task)}
+//                       className="transition hover:scale-110"
+//                     >
+//                       {task.completed ? (
+//                         <CheckCircle2 className="text-green-500" size={22} />
+//                       ) : (
+//                         <Circle className="text-purple-400" size={22} />
+//                       )}
+//                     </button>
+
+//                     <div>
+//                       <h3
+//                         className={`font-medium ${
+//                           task.completed
+//                             ? "line-through text-gray-500"
+//                             : "text-white"
+//                         }`}
+//                       >
+//                         {task.title}
+//                       </h3>
+
+//                       <p
+//                         className={`text-sm ${
+//                           task.completed
+//                             ? "text-gray-500 line-through"
+//                             : "text-gray-400"
+//                         }`}
+//                       >
+//                         {task.description}
+//                       </p>
+//                     </div>
+//                   </div>
+
+//                   {/* Priority Badge */}
+//                   <span
+//                     className={`text-xs px-3 py-1 rounded-full font-medium ${
+//                       task.priority === "High"
+//                         ? "bg-red-500/20 text-red-400"
+//                         : task.priority === "Medium"
+//                           ? "bg-purple-500/20 text-purple-400"
+//                           : "bg-blue-500/20 text-blue-400"
+//                     }`}
+//                   >
+//                     {task.priority}
+//                   </span>
+//                 </div>
+//               ))}
+//             </div>
 //           </div>
 //         ))}
 //       </div>
 //     </div>
 //   );
 // }
-
 
 "use client";
 
@@ -224,7 +245,7 @@ export default function ViewTasksPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Detect logged in user
+  // Detect logged-in user
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -233,7 +254,7 @@ export default function ViewTasksPage() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch tasks of this user only
+  // Fetch user's tasks
   useEffect(() => {
     if (!user) return;
 
@@ -241,7 +262,7 @@ export default function ViewTasksPage() {
       try {
         const q = query(
           collection(db, "tasks"),
-          where("userId", "==", user.uid),
+          where("userId", "==", user.uid)
         );
 
         const snapshot = await getDocs(q);
@@ -251,21 +272,21 @@ export default function ViewTasksPage() {
           ...(doc.data() as Omit<Task, "id">),
         }));
 
-        // Pending tasks first within their groups
+        // Pending tasks first
         taskList.sort((a, b) => Number(a.completed) - Number(b.completed));
 
         setTasks(taskList);
       } catch (error) {
         console.error("Error fetching tasks:", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchTasks();
   }, [user]);
 
-  // Toggle task completion
+  // Toggle completion
   const toggleTask = async (task: Task) => {
     try {
       await updateDoc(doc(db, "tasks", task.id), {
@@ -274,8 +295,8 @@ export default function ViewTasksPage() {
 
       setTasks((prev) =>
         prev.map((t) =>
-          t.id === task.id ? { ...t, completed: !t.completed } : t,
-        ),
+          t.id === task.id ? { ...t, completed: !t.completed } : t
+        )
       );
     } catch (error) {
       console.error("Error updating task:", error);
@@ -284,11 +305,13 @@ export default function ViewTasksPage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto text-gray-400">Loading tasks...</div>
+      <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
+        <div className="text-gray-400">Loading tasks...</div>
+      </div>
     );
   }
 
-  // --- Grouping Logic ---
+  // Group tasks by date
   const tasksByDate: Record<string, Task[]> = {};
 
   tasks.forEach((task) => {
@@ -307,66 +330,93 @@ export default function ViewTasksPage() {
     tasksByDate[date].push(task);
   });
 
-  // Sort dates in descending order (Newest first)
+  // Sort dates (newest first)
   const sortedDates = Object.keys(tasksByDate).sort((a, b) => {
     if (a === "No Date") return 1;
     if (b === "No Date") return -1;
-    
-    // Split "DD/MM/YYYY" to compare as Date objects
+
     const [dayA, monthA, yearA] = a.split("/").map(Number);
     const [dayB, monthB, yearB] = b.split("/").map(Number);
-    
-    return new Date(yearB, monthB - 1, dayB).getTime() - new Date(yearA, monthA - 1, dayA).getTime();
+
+    return (
+      new Date(yearB, monthB - 1, dayB).getTime() -
+      new Date(yearA, monthA - 1, dayA).getTime()
+    );
   });
 
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full min-w-0 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold text-white mb-8">View Tasks</h1>
+      <h1 className="mb-6 text-2xl sm:text-3xl font-bold text-white break-words">
+        View Tasks
+      </h1>
 
-      {/* Task List Container */}
+      {/* Empty State */}
+      {tasks.length === 0 && (
+        <div className="rounded-xl border border-purple-900/40 bg-black/40 p-6 text-gray-400">
+          No tasks found.
+        </div>
+      )}
+
+      {/* Task Groups */}
       <div className="space-y-8">
-        {tasks.length === 0 && (
-          <div className="bg-black/40 border border-purple-900/40 rounded-xl p-6 text-gray-400">
-            No tasks found.
-          </div>
-        )}
-
         {sortedDates.map((date) => (
           <div key={date} className="space-y-3">
             {/* Date Header */}
             <div className="flex items-center gap-4 px-2">
-                <h2 className="text-purple-400 text-sm font-bold uppercase tracking-widest">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-purple-400 whitespace-nowrap">
                 {date}
-                </h2>
-                <div className="h-px bg-purple-900/30 flex-grow"></div>
+              </h2>
+
+              <div className="h-px flex-1 bg-purple-900/30" />
             </div>
 
-            {/* Task Group Card */}
-            <div className="bg-black/40 border border-purple-900/40 rounded-xl divide-y divide-purple-900/20 overflow-hidden">
+            {/* Task Card */}
+            <div className="overflow-hidden rounded-xl border border-purple-900/40 bg-black/40 divide-y divide-purple-900/20">
               {tasksByDate[date].map((task) => (
                 <div
                   key={task.id}
-                  className={`flex items-center justify-between px-6 py-4 transition hover:bg-purple-900/10 ${
-                    task.completed ? "opacity-60" : ""
-                  }`}
+                  className={`
+                    flex
+                    flex-col
+                    gap-4
+                    sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                    px-4
+                    sm:px-6
+                    py-4
+                    transition
+                    hover:bg-purple-900/10
+                    ${
+                      task.completed
+                        ? "opacity-60"
+                        : ""
+                    }
+                  `}
                 >
-                  {/* Left Section */}
-                  <div className="flex items-center gap-4">
+                  {/* Left */}
+                  <div className="flex items-start gap-4 min-w-0 flex-1">
                     <button
                       onClick={() => toggleTask(task)}
-                      className="transition hover:scale-110"
+                      className="flex-shrink-0 transition hover:scale-110"
                     >
                       {task.completed ? (
-                        <CheckCircle2 className="text-green-500" size={22} />
+                        <CheckCircle2
+                          className="text-green-500"
+                          size={22}
+                        />
                       ) : (
-                        <Circle className="text-purple-400" size={22} />
+                        <Circle
+                          className="text-purple-400"
+                          size={22}
+                        />
                       )}
                     </button>
 
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <h3
-                        className={`font-medium ${
+                        className={`break-words font-medium ${
                           task.completed
                             ? "line-through text-gray-500"
                             : "text-white"
@@ -376,9 +426,9 @@ export default function ViewTasksPage() {
                       </h3>
 
                       <p
-                        className={`text-sm ${
+                        className={`mt-1 break-words text-sm ${
                           task.completed
-                            ? "text-gray-500 line-through"
+                            ? "line-through text-gray-500"
                             : "text-gray-400"
                         }`}
                       >
@@ -387,14 +437,14 @@ export default function ViewTasksPage() {
                     </div>
                   </div>
 
-                  {/* Priority Badge */}
+                  {/* Priority */}
                   <span
-                    className={`text-xs px-3 py-1 rounded-full font-medium ${
+                    className={`self-start sm:self-auto whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
                       task.priority === "High"
                         ? "bg-red-500/20 text-red-400"
                         : task.priority === "Medium"
-                          ? "bg-purple-500/20 text-purple-400"
-                          : "bg-blue-500/20 text-blue-400"
+                        ? "bg-purple-500/20 text-purple-400"
+                        : "bg-blue-500/20 text-blue-400"
                     }`}
                   >
                     {task.priority}
