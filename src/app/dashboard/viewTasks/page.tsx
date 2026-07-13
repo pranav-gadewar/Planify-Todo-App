@@ -245,7 +245,7 @@ export default function ViewTasksPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Detect logged-in user
+  // Detect logged in user
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -254,7 +254,7 @@ export default function ViewTasksPage() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch user's tasks
+  // Fetch tasks of this user only
   useEffect(() => {
     if (!user) return;
 
@@ -278,15 +278,15 @@ export default function ViewTasksPage() {
         setTasks(taskList);
       } catch (error) {
         console.error("Error fetching tasks:", error);
-      } finally {
-        setLoading(false);
       }
+
+      setLoading(false);
     };
 
     fetchTasks();
   }, [user]);
 
-  // Toggle completion
+  // Toggle task completion
   const toggleTask = async (task: Task) => {
     try {
       await updateDoc(doc(db, "tasks", task.id), {
@@ -305,8 +305,8 @@ export default function ViewTasksPage() {
 
   if (loading) {
     return (
-      <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
-        <div className="text-gray-400">Loading tasks...</div>
+      <div className=" w-full  px-4 text-gray-400">
+        Loading tasks...
       </div>
     );
   }
@@ -330,7 +330,7 @@ export default function ViewTasksPage() {
     tasksByDate[date].push(task);
   });
 
-  // Sort dates (newest first)
+  // Sort dates (Newest First)
   const sortedDates = Object.keys(tasksByDate).sort((a, b) => {
     if (a === "No Date") return 1;
     if (b === "No Date") return -1;
@@ -345,71 +345,55 @@ export default function ViewTasksPage() {
   });
 
   return (
-    <div className="w-full min-w-0 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-5xl overflow-x-hidden px-4 sm:px-6">
       {/* Page Title */}
-      <h1 className="mb-6 text-2xl sm:text-3xl font-bold text-white break-words">
+      <h1 className="mb-6 text-2xl font-bold text-white sm:text-3xl">
         View Tasks
       </h1>
 
-      {/* Empty State */}
-      {tasks.length === 0 && (
-        <div className="rounded-xl border border-purple-900/40 bg-black/40 p-6 text-gray-400">
-          No tasks found.
-        </div>
-      )}
+      {/* Task List */}
+      <div className="space-y-6">
+        {tasks.length === 0 && (
+          <div className="rounded-xl border border-purple-900/40 bg-black/40 p-6 text-gray-400">
+            No tasks found.
+          </div>
+        )}
 
-      {/* Task Groups */}
-      <div className="space-y-8">
         {sortedDates.map((date) => (
           <div key={date} className="space-y-3">
-            {/* Date Header */}
-            <div className="flex items-center gap-4 px-2">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-purple-400 whitespace-nowrap">
+            {/* Date */}
+            <div className="flex items-center gap-3 px-1">
+              <h2 className="shrink-0 text-xs font-bold uppercase tracking-widest text-purple-400 sm:text-sm">
                 {date}
               </h2>
 
               <div className="h-px flex-1 bg-purple-900/30" />
             </div>
 
-            {/* Task Card */}
+            {/* Tasks */}
             <div className="overflow-hidden rounded-xl border border-purple-900/40 bg-black/40 divide-y divide-purple-900/20">
               {tasksByDate[date].map((task) => (
                 <div
                   key={task.id}
-                  className={`
-                    flex
-                    flex-col
-                    gap-4
-                    sm:flex-row
-                    sm:items-center
-                    sm:justify-between
-                    px-4
-                    sm:px-6
-                    py-4
-                    transition
-                    hover:bg-purple-900/10
-                    ${
-                      task.completed
-                        ? "opacity-60"
-                        : ""
-                    }
-                  `}
+                  className={`flex flex-col gap-4 px-4 py-4 transition hover:bg-purple-900/10 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${
+                    task.completed ? "opacity-60" : ""
+                  }`}
                 >
                   {/* Left */}
-                  <div className="flex items-start gap-4 min-w-0 flex-1">
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
                     <button
                       onClick={() => toggleTask(task)}
-                      className="flex-shrink-0 transition hover:scale-110"
+                      className="mt-0.5 shrink-0 transition hover:scale-110"
                     >
                       {task.completed ? (
                         <CheckCircle2
-                          className="text-green-500"
                           size={22}
+                          className="text-green-500"
                         />
                       ) : (
                         <Circle
-                          className="text-purple-400"
                           size={22}
+                          className="text-purple-400"
                         />
                       )}
                     </button>
@@ -418,7 +402,7 @@ export default function ViewTasksPage() {
                       <h3
                         className={`break-words font-medium ${
                           task.completed
-                            ? "line-through text-gray-500"
+                            ? "text-gray-500 line-through"
                             : "text-white"
                         }`}
                       >
@@ -426,9 +410,9 @@ export default function ViewTasksPage() {
                       </h3>
 
                       <p
-                        className={`mt-1 break-words text-sm ${
+                        className={`mt-1 break-words whitespace-pre-wrap text-sm ${
                           task.completed
-                            ? "line-through text-gray-500"
+                            ? "text-gray-500 line-through"
                             : "text-gray-400"
                         }`}
                       >
@@ -438,17 +422,19 @@ export default function ViewTasksPage() {
                   </div>
 
                   {/* Priority */}
-                  <span
-                    className={`self-start sm:self-auto whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
-                      task.priority === "High"
-                        ? "bg-red-500/20 text-red-400"
-                        : task.priority === "Medium"
-                        ? "bg-purple-500/20 text-purple-400"
-                        : "bg-blue-500/20 text-blue-400"
-                    }`}
-                  >
-                    {task.priority}
-                  </span>
+                  <div className="flex justify-start sm:justify-end">
+                    <span
+                      className={`inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-medium ${
+                        task.priority === "High"
+                          ? "bg-red-500/20 text-red-400"
+                          : task.priority === "Medium"
+                          ? "bg-purple-500/20 text-purple-400"
+                          : "bg-blue-500/20 text-blue-400"
+                      }`}
+                    >
+                      {task.priority}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
